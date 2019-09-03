@@ -153,6 +153,7 @@ Func mul a, b, c = Mal
 	End
 	Return b
 End
+
 Func flrdiv a, b, count = 0
 	If AND a =? 0, b =? 0
 		Return 0
