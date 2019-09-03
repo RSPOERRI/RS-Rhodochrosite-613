@@ -3,37 +3,28 @@
 	=> @ Raphael Spoerri
 	=> Let's see it in action:
 =end
-
 def compile (code, show = false)
-
 #Make sure the front end doesn't choke on commas
   	reg = /\S\,/
 	while reg.match(code)
-	
 		before = reg.match(code)[0]
 		after = before.sub(/,/, " ,")
 		code = code.sub(before, after)
-		
 	end
 #Make sure the front end doesn't choke on increment
 	reg = /\S\+\+/
 	while reg.match(code)
-	
 		before = reg.match(code)[0]
 		after = before.sub(/\+\+/, " ++")
 		code = code.sub(before, after)
-		
 	end
 #Make sure the front end doesn't choke on decrement
 	reg = /\S\-\-/
 	while reg.match(code)
-	
 		before = reg.match(code)[0]
 		after = before.sub(/\-\-/, " --")
-		code = code.sub(before, after)
-		
+		code = code.sub(before, after)	
 	end
-	
 #divide the input into lines:
 	code = code.split("\n")
 	lexer = []
@@ -76,10 +67,10 @@ def compile (code, show = false)
 				when "?:"
 					out += "#"	
 				else
-					unless /[^\w\(\)\>\<,\-\=\.]/.match(lex)
+					unless /[^\w\(\)\>\<,\-\.]/.match(lex)
 						case lex.sub(/\(.*\)/, "").strip
 							#try to weed out other predefined functions and keywords
-							when "puts", "gets", "else", ".to_i", "to_f", "to_a", "to_s", "and", "or", "not", "while", "else", "for", "elsif", "nil"
+							when "puts", "gets", "else","true","false", ".to_i", "to_f", "to_a", "to_s", "and", "or", "not", "while", "else", "for", "elsif", "nil"
 								#DO ABSOLUTELY NOTHING
 							else
 							out += lex + " "
@@ -97,10 +88,29 @@ def compile (code, show = false)
 end
 
 
+=begin
+=> Here is the Keywords for my programming language:
+	=> The only operators are =, =? (instead of `==`), >, <, ++, and -- 
+	=>`If`
+		=> General if statement; no `else` statements 
+	=>`Return`
+		=> `return` statement
+	=>`Func`
+		=> Function declaration; parentheses are optional
+	=>`End`
+		=> End marker for an If statement or function declaration
+	=>`Mal`
+		=> The absence of value; null / nil
+	=> And of course, variables:
+		=> e.g. foo_bar = 89
+	=> The only data types are:
+		Number
+		Function
+=end
 
-#our code...
+
+#code...
 x = %{
-
 ?: logical op `&`
 Func AND a, b
 	If a 
@@ -158,7 +168,7 @@ Func flrdiv a, b, count = 0
 	If AND a =? 0, b =? 0
 		Return 0
 	End
-	If sub(a, b) >= 0
+	If sub(a, b) > -1
 		Return div sub(a, b), b, count ++
 	End
 	Return count
