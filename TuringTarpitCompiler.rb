@@ -41,7 +41,7 @@ def compile (code, show = false)
 	code.each do |line|
 		lexer << line.split(/\s/)
 	end
-#just _one_ predefined function, besides for print; user input:
+	#this string will be the code compiled to Ruby
 	out = "def ask\n\treturn gets.to_f\nend\n"
 	#iterate
 	for line in lexer
@@ -49,45 +49,37 @@ def compile (code, show = false)
 			case lex
 				# Is equal to?
 				when "=?"
-					out += "== "
-					
+					out += " == "
+				#assignment operator, ":=" is to Pascal-y
 				when "="
-					out += " ="
-					
-				#the absence of value, like null
+					out += " = "	
+				#the absence of value, like null, called `nil` in Ruby
+				#I chose the prefix `mal` because it means `bad` or `messed up`
 				when "Mal"
 					out += "nil "
-					
 				when "If"
 					out += "if "
-					
 				when "Func"
 					out += "def "
-					
 				when "++"
 					out += " + 1"
-					
 				when "--"
 					out += " - 1"
-					
 				when "End"
 					out += "end"
-					
 				when "Return"
 					out += "return "
-					
+				#most importan
 				when "Print"
 					out += "print "
-					
-				#comment
+				#comment ;)
 				when "?:"
-					out += "#"
-					
+					out += "#"	
 				else
 					unless /[^\w\(\)\>\<,\-\=\.]/.match(lex)
 						case lex.sub(/\(.*\)/, "").strip
 							#try to weed out other predefined functions and keywords
-							when "puts", "gets", "else", ".to_i", "and", "or", "not", "while", "else", "for", "elsif", "nil"
+							when "puts", "gets", "else", ".to_i", "to_f", "to_a", "to_s", "and", "or", "not", "while", "else", "for", "elsif", "nil"
 								#DO ABSOLUTELY NOTHING
 							else
 							out += lex + " "
@@ -95,6 +87,7 @@ def compile (code, show = false)
 					end
 			end
 		end
+		#don't forget the line feed
 		out += "\n"
 	end
 	if show
@@ -106,7 +99,7 @@ end
 
 
 #our code...
-x = >>CODE
+x = %{
 
 ?: logical op `&`
 Func AND a, b
@@ -162,14 +155,14 @@ Func mul a, b, c = Mal
 End
 Func flrdiv a, b, count = 0
 	If AND a =? 0, b =? 0
-		Return 00000000000000000000000000000000000000000000
+		Return 0
 	End
 	If sub(a, b) >= 0
 		Return div sub(a, b), b, count ++
 	End
 	Return count
 End
-CODE
+}
 
 #end code section
 
